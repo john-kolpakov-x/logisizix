@@ -1,0 +1,117 @@
+//noinspection SpellCheckingInspection
+plugins {
+  id 'org.springframework.boot' version "2.7.3" apply false
+}
+
+allprojects {
+  apply plugin: 'java'
+  apply plugin: 'eclipse'
+  apply plugin: 'idea'
+
+  version = rootProject.file('versions/version.txt').text.trim()
+
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
+
+  group = "kz.pompei.logisizix"
+
+  buildscript {
+    repositories {
+      mavenLocal()
+      mavenCentral()
+    }
+  }
+
+  repositories {
+    mavenLocal()
+    if (System.getenv('GG_REPO')?.trim()) maven { url System.getenv('GG_REPO').trim() }
+    mavenCentral()
+  }
+
+  [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+  [compileJava, compileTestJava]*.options*.debugOptions*.debugLevel = "source,lines,vars"
+
+}
+
+subprojects {
+
+  task allDeps(type: DependencyReportTask) {}
+
+  dependencies {
+    ext.mybatisSpringBootStarterVersion = "2.2.2"
+
+    ext.greetgoUtilVersion = "0.1.3"
+
+    ext.postgresVersion = "42.3.7"
+    ext.hikariVersion = "5.0.1"
+    ext.jacksonVersion = "2.10.4"
+    ext.logbackVersion = "1.2.3"
+    ext.lombokVersion = "1.18.22"
+    ext.liquibaseVersion = "4.8.0"
+
+    ext.snakeyamlVersion = "1.32"
+    ext.jqueryVersion = "3.6.1"
+
+    ext.springVersion = "5.3.22"
+    ext.springBootVersion = "2.7.4"
+
+    ext.testNgVersion = "7.4.0"
+    ext.assertjVersion = "3.12.2"
+
+    testImplementation "org.testng:testng:$testNgVersion"
+    testImplementation "org.webjars:jquery:$jqueryVersion"
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    testCompileOnly "org.projectlombok:lombok:$lombokVersion"
+    testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
+  }
+
+  tasks.withType(Javadoc) {
+    //noinspection SpellCheckingInspection
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+  }
+
+  test.useTestNG()
+  test.testLogging.exceptionFormat = "full"
+
+  idea.module.downloadSources = true
+  idea.module.downloadJavadoc = true
+  idea.module.inheritOutputDirs = false
+  idea.module.outputDir = file("$buildDir/idea_classes/main/")
+  idea.module.testOutputDir = file("$buildDir/idea_classes/test/")
+  idea.module.excludeDirs += file('mybpm/volumes')
+
+  sourceSets.main.java.srcDirs = ["src"]
+  sourceSets.test.java.srcDirs = ["test_src"]
+  sourceSets.main.resources.srcDirs = ["src_resources"]
+  sourceSets.test.resources.srcDirs = ["test_resources"]
+
+  sourceSets.main.resources {
+    srcDirs += sourceSets.main.java.srcDirs
+    exclude '**/*.java'
+  }
+  sourceSets.test.resources {
+    srcDirs += sourceSets.test.java.srcDirs
+    exclude '**/*.java'
+  }
+
+  jar {
+    manifest {
+      attributes 'Specification-Title': project.name
+      attributes 'Specification-Version': archiveVersion
+      attributes 'Specification-Vendor': "greetgo!"
+
+      //noinspection UnnecessaryQualifiedReference
+      attributes 'Implementation-Version': colon.GitVersion.extractLastGitCommitId("${rootProject.projectDir}/.git/")
+
+      //attributes 'Created-By': System.getProperty("user.name")
+      //attributes 'Created-At': new Date().format("yyyy-MM-dd/HH:mm:ss")
+    }
+  }
+
+}
