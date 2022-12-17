@@ -1,0 +1,9 @@
+dependencies {
+
+  //noinspection VulnerableLibrariesLocal
+  implementation 'com.h2database:h2:2.1.214'
+
+  //noinspection VulnerableLibrariesLocal
+  implementation 'org.liquibase:liquibase-core:4.18.0'
+
+}

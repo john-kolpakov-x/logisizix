@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+  <changeSet author="pompei" id="create-table-structure-data">
+    <sql splitStatements="false">
+      <![CDATA[
+      --
+      create table BOARD
+      (
+        id         varchar2(20) not null,
+        name_path  varchar2(1000) not null,
+        value_text CLOB,
+        primary key (id, name_path)
+      )
+      --
+      ]]>
+    </sql>
+  </changeSet>
+
+
+</databaseChangeLog>
