@@ -6,4 +6,5 @@ dependencies {
   //noinspection VulnerableLibrariesLocal
   implementation 'org.liquibase:liquibase-core:4.18.0'
 
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
 }

@@ -7,4 +7,6 @@ public class RootTest {
   public double x, y, z;
   public Map<String, ElementTest> elements;
   public StoneTest stone;
+
+  public Map<String, Map<String, Map<String, ElementTest>>> tripleElements;
 }
